@@ -1,0 +1,23 @@
+<?php
+require_once "vendor/autoload.php";
+
+$migrator = new Talandis\LaraMigrations\Migrator();
+$migrator->registerContainerItem( 'config-path', dirname( __FILE__) . '/core/configuration/' );
+$migrator->registerContainerItem( 'db-config', function ($c) {
+
+    require_once( $c['config-path'] . $c['environment'] . '.php');
+
+    return [
+        'driver' => 'mysql',
+        'host' => $db['host'],
+        'database' => $db['database'],
+        'username' => $db['username'],
+        'password' => $db['password'],
+        'charset' => 'utf8',
+        'prefix' => '',
+        'collation' => 'utf8_general_ci',
+        'schema' => 'public'
+    ];
+} );
+
+$migrator->run();

@@ -1,0 +1,26 @@
+{
+    "name": "talandis/lara-migrations",
+    "description": "Laravel migrations for using outside Laravel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tomas Talandis",
+            "email": "tomas@talandis.lt"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/database": "^5.2",
+        "illuminate/console": "^5.2",
+        "illuminate/filesystem": "^5.2",
+        "pimple/pimple": "^3.0",
+        "mockery/mockery": "^0.9.5",
+        "symfony/process": "^3.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "Talandis\\LaraMigrations\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
