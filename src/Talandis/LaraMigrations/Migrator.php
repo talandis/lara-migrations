@@ -11,10 +11,26 @@ class Migrator {
 
 	protected $container;
 
-	public function __construct() {
+	private static $instance;
+
+	private function __construct() {
 		$this->container = new Container();
 
 		$this->registerDefaultContainerItems();
+	}
+
+	public static function getInstance() {
+
+		if ( static::$instance == null ) {
+			static::$instance = new Migrator();
+		}
+
+		return static::$instance;
+	}
+
+	public function getContainer()
+	{
+		return $this->container;
 	}
 
 	public function registerContainerItem( $name, $action )
@@ -32,11 +48,6 @@ class Migrator {
 
 		    $environment = 'production';
 		    if (!empty($argv[2]) && preg_match('/--database=(.*?)$/si', $argv[2], $matches) ) {
-
-				if (!empty( $c['config-path']) && !file_exists( $c['config-path'] . $matches[1] . '.php')) {
-					throw new Exception("Missing configuration file '".$c['config-path'] . $matches[1] . ".php'");
-				}
-
 		        $environment = $matches[1];
 		        unset($argv[2]);
 		    }
