@@ -19,7 +19,7 @@
     },
     "autoload": {
         "files": [
-            "vendor/talandis/lara-migrations/src/Schema.php"
+            "src/Schema.php"
         ],    
         "psr-0": {
             "Talandis\\LaraMigrations\\": "src/"
