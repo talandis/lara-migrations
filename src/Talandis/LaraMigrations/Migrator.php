@@ -1,8 +1,6 @@
 <?php
 
-namespace \Talandis\LaraMigrations;
-
-	
+namespace Talandis\LaraMigrations;
 
 use Symfony\Component\Console\Application;
 use Illuminate\Database\Console\Migrations;
