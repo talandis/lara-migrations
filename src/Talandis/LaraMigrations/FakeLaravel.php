@@ -2,13 +2,19 @@
 
 namespace Talandis\LaraMigrations;
 
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Input\ArrayInput;
+
 class FakeLaravel
 {
     private $command;
 
-    public function __construct($command)
+    protected $databasePath;
+
+    public function __construct($command, $databasePath = null )
     {
         $this->command = $command;
+        $this->databasePath = $databasePath;
     }
 
     /**
@@ -31,9 +37,15 @@ class FakeLaravel
         }
     }
 
-    public static function databasePath()
+    public function databasePath()
     {
-        return dirname(__FILE__) . '/';
+        if ( !empty( $this->databasePath ) ) {
+            return $this->databasePath;
+        }
+
+        list ( $prefix, $sourceFolder ) = explode('talandis', __DIR__ );
+
+        return dirname( $prefix );
     }
 
     public static function environment()

@@ -1,7 +1,8 @@
 <?php
 require_once "vendor/autoload.php";
 
-$migrator = new Talandis\LaraMigrations\Migrator();
+$migrator = \Talandis\LaraMigrations\Migrator::getInstance();
+$migrator->registerContainerItem( 'migrations-folder', dirname( __FILE__ ) . '/migrations' );
 $migrator->registerContainerItem( 'config-path', dirname( __FILE__) . '/core/configuration/' );
 $migrator->registerContainerItem( 'db-config', function ($c) {
 

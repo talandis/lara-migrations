@@ -1,7 +1,5 @@
 <?php
 
-namespace Talandis\LaraMigrations;
-
 class Schema extends \Illuminate\Support\Facades\Facade
 {
     /**
@@ -12,7 +10,7 @@ class Schema extends \Illuminate\Support\Facades\Facade
      */
     public static function connection($name)
     {
-        global $container;
+        $container = \Talandis\LaraMigrations\Migrator::getInstance()->getContainer();
 
         return $container['connection']->getSchemaBuilder();
     }
@@ -24,7 +22,7 @@ class Schema extends \Illuminate\Support\Facades\Facade
      */
     protected static function getFacadeAccessor()
     {
-        global $container;
+        $container = \Talandis\LaraMigrations\Migrator::getInstance()->getContainer();
 
         return $container['connection']->getSchemaBuilder();
     }
@@ -53,5 +51,3 @@ class Schema extends \Illuminate\Support\Facades\Facade
         }
     }
 }
-
-

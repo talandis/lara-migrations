@@ -1,5 +1,4 @@
 <?php
-
 namespace Talandis\LaraMigrations;
 
 use Symfony\Component\Console\Application;
@@ -7,8 +6,6 @@ use Illuminate\Database\Console\Migrations;
 use Pimple\Container;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Input\ArrayInput;
-
-
 
 class Migrator {
 
@@ -20,14 +17,15 @@ class Migrator {
 		$this->registerDefaultContainerItems();
 	}
 
-	public function registerContainerItem( $name, $action ) 
+	public function registerContainerItem( $name, $action )
 	{
 		$this->container[ $name ] = $action;
 	}
 
-	protected function registerDefaultContainerItems() 
+	protected function registerDefaultContainerItems()
 	{
 		$this->container['migration-table'] = 'migrations';
+		$this->container['migrations-path'] = null;
 		$this->container['environment'] = function($c) {
 
 		    global $argv;
@@ -35,7 +33,7 @@ class Migrator {
 		    $environment = 'production';
 		    if (!empty($argv[2]) && preg_match('/--database=(.*?)$/si', $argv[2], $matches) ) {
 
-				if (!empty( $c['config-path']) && !file_exists( $c['config-path'] . $matches[1] . '.php')) {	
+				if (!empty( $c['config-path']) && !file_exists( $c['config-path'] . $matches[1] . '.php')) {
 					throw new Exception("Missing configuration file '".$c['config-path'] . $matches[1] . ".php'");
 				}
 
@@ -68,12 +66,12 @@ class Migrator {
 		};
 
 		$this->container['composer'] = function ($c) {
-		    $composer = new Illuminate\Support\Composer($c['filesystem']);
+		    $composer = new \Illuminate\Support\Composer($c['filesystem']);
 		    return $composer;
 		};
 
 		$this->container['builder'] = function ($c) {
-		    $builder = new Illuminate\Database\Schema\Builder($c['connection']);
+		    $builder = new \Illuminate\Database\Schema\Builder($c['connection']);
 		    return $builder;
 		};
 
@@ -100,24 +98,24 @@ class Migrator {
 		};
 
 		$this->container['migrator'] = function ($c) {
-		    return new Illuminate\Database\Migrations\Migrator($c['migration-repo'], $c['resolver'], $c['filesystem']);
+		    return new \Illuminate\Database\Migrations\Migrator($c['migration-repo'], $c['resolver'], $c['filesystem']);
 		};
 
 		$this->container['install-command'] = function ($c) {
 		    $command = new Migrations\InstallCommand($c['migration-repo']);
-		    $command->setLaravel(new FakeLaravel($command));
+		    $command->setLaravel(new FakeLaravel($command, $c['migrations-path']));
 		    return $command;
 		};
 
 		$this->container['migrate-make-command'] = function ($c) {
 		    $command = new Migrations\MigrateMakeCommand($c['migration-creator'], $c['composer']);
-		    $command->setLaravel(new FakeLaravel($command));
+		    $command->setLaravel(new FakeLaravel($command, $c['migrations-path']));
 		    return $command;
 		};
 
 		$this->container['migrate-command'] = function ($c) {
 		    $command = new Migrations\MigrateCommand($c['migrator']);
-		    $command->setLaravel(new FakeLaravel($command));
+		    $command->setLaravel(new FakeLaravel($command, $c['migrations-path']));
 		    return $command;
 		};
 	}
